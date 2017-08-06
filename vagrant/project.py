@@ -1,8 +1,9 @@
-from flask import Flask , render_template
+from flask import Flask , render_template, request, redirect, url_for
+app = Flask(__name__)
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Restaurant, Base, MenuItem
-app = Flask(__name__)
 
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
@@ -17,15 +18,30 @@ def restaurantMenu(restaurant_id):
     items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id)
     return render_template('menu.html', restaurant = restaurant, items = items)
 
-@app.route('/restaurants/<int:restaurant_id>/new/')
+@app.route('/restaurants/<int:restaurant_id>/new/', methods = ['GET', 'POST'])
 def newMenuItem(restaurant_id):
-    return "page to create a new menu item. Task 1 complete!"
+    if request.method == 'POST':
+        newItem = MenuItem(name = request.form['name'], restaurant_id = restaurant_id)
+        session.add(newItem)
+        session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id = restaurant_id))
+    else:
+        return render_template('newMenuItem.html', restaurant_id = restaurant_id)
 
 # Task 2: Create route for editMenuItem function here
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods = ['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
-    return "page to edit a menu item. Task 2 complete!"
+    editedItem = session.query(MenuItem).filter_by(id = menu_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedItem.name = request.form['name']
+
+        session.add(editedItem)
+        session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id = restaurant_id))
+    else:
+        return render_template('editMenuItem.html', restaurant_id = restaurant_id, menu_id = menu_id, item = editedItem)
 
 # Task 3: Create a route for deleteMenuItem function here
 

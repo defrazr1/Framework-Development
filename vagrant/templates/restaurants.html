@@ -1,6 +1,6 @@
 <html>
   <body>
-    <h1>{{restaurant.name}}</h1>
+    <h1>Restaurants</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
       <p>
@@ -10,21 +10,21 @@
       </p>
       {% endif %}
     {% endwith %}
-    <a href='{{url_for('newMenuItem', restaurant_id = restaurant.id)}}'>Create New Restaurant</a>
+    <a href='{{url_for('newRestaurant')}}'>Create New Restaurant</a>
     <br>
-    {% for i in items %}
+    {% for restaurant in restaurants %}
 
     <div>
       <br>
-      {{i.name}}
+      {{restaurant.name}}
       <br>
-      {{i.description}}
+      {{restaurant.description}}
       <br>
-      {{i.price}}
+      {{restaurant.price}}
       <br>
-      <a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id)}}'>Edit</a>
+      <a href='#'>Edit</a>
       <br>
-      <a href='{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id)}}'>Delete</a>
+      <a href='#'>Delete</a>
       <br><br>
     </div>
 

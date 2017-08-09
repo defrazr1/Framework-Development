@@ -8,26 +8,24 @@
         <li><strong>{{message}}</strong></li>
         {% endfor %}
       </ul>
-      {% endif %}
+    {% endif %}
     {% endwith %}
-    <a href='#'>Create New Item</a>
+    <a href='"{{url_for('newMenuItem', restaurant_id = restaurant.id)}}" '>Create New Item</a>
     <br>
     {% for item in items %}
-
     <div>
       <br>
-      {{item.name}}
+      <strong>{{item.name}}</strong>
       <br>
       {{item.description}}
       <br>
       {{item.price}}
       <br>
-      <a href='#'>Edit</a>
+      <a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = item.id)}}'>Edit</a>
       <br>
-      <a href='#'>Delete</a>
+      <a href='{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = item.id)}}'>Delete</a>
       <br><br>
     </div>
-
     {% endfor %}
   </body>
 </html>

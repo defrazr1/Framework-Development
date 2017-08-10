@@ -104,11 +104,21 @@ def editMenuItem(restaurant_id, menu_id):
         return redirect(url_for('showMenu', restaurant_id = restaurant_id))
     else:
         return render_template('editMenuItem.html', restaurant_id = restaurant_id,
-                    menu_id = menu_id, item = editedItem)
+                                menu_id = menu_id, item = editedItem)
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/delete/', methods = ['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
-    return render_template('deleteMenuItem.html', restaurant = restaurant, menu_id = menu_id, item = item)
+    itemToDelete = session.query(MenuItem).filter_by(id = menu_id).one()
+    if request.method == 'POST':
+        session.delete(itemToDelete)
+        session.commit()
+        flash(("%s has been DELETED!") % (itemToDelete.name))
+        return redirect(url_for('showMenu', restaurant_id = restaurant_id))
+    else:
+        return render_template('deleteMenuItem.html',
+                                restaurant_id = restaurant_id,
+                                menu_id = menu_id,
+                                item = itemToDelete)
 
 #Test Database for template rendering
 #Fake Restaurants

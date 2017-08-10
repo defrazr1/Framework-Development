@@ -10,6 +10,25 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+'''
+###API Endpoints###
+'''
+@app.route('/restaurants/JSON/')
+def showRestaurantsJSON():
+    restaurants = session.query(Restaurant).all()
+    return jsonify(Restaurants=[r.serialize for r in restaurants])
+
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON/')
+def showMenuJSON(restaurant_id):
+    restaurantMenu = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+    return jsonify(MenuItems = [m.serialize for m in restaurantMenu])
+
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON/')
+def showItemJSON(restaurant_id, menu_id):
+    item = session.query(MenuItem).filter_by(id = menu_id).one()
+    return jsonify(MenuItem = [item.serialize])
+
 '''
 ###Restaurant Routing and CRUD functinality###
 '''
@@ -119,16 +138,6 @@ def deleteMenuItem(restaurant_id, menu_id):
                                 restaurant_id = restaurant_id,
                                 menu_id = menu_id,
                                 item = itemToDelete)
-
-#Test Database for template rendering
-#Fake Restaurants
-# restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
-#
-# restaurants = [{'name': 'The CRUDdy Crab', 'id': '1'}, {'name':'Blue Burgers', 'id':'2'},{'name':'Taco Hut', 'id':'3'}]
-#
-# #Fake Menu Items
-# items = [ {'name':'Cheese Pizza', 'description':'made with fresh cheese', 'price':'$5.99','course' :'Entree', 'id':'1'}, {'name':'Chocolate Cake','description':'made with Dutch Chocolate', 'price':'$3.99', 'course':'Dessert','id':'2'},{'name':'Caesar Salad', 'description':'with fresh organic vegetables','price':'$5.99', 'course':'Entree','id':'3'},{'name':'Iced Tea', 'description':'with lemon','price':'$.99', 'course':'Beverage','id':'4'},{'name':'Spinach Dip', 'description':'creamy dip with fresh spinach','price':'$1.99', 'course':'Appetizer','id':'5'} ]
-# item =  {'name':'Cheese Pizza','description':'made with fresh cheese','price':'$5.99','course' :'Entree'}
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

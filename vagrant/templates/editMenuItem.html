@@ -4,13 +4,19 @@
     <h1>New Menu Item</h1>
 
     <form action="#" method = 'POST'>
-      <p>Name:</p>
-
+      <p>Name: <strong>{{item.name}}</strong></p>
       <input type = 'text' size = '30' name = 'name' placeholder= '{{item.name}}'>
 
+      <p>Price:<strong>{{item.price}}</strong></p>
+      <input type = 'text' size = '30' name = 'name' placeholder= '{{item.price}}'>
+
+      <p>Description:<strong>{{item.description}}</strong></p>
+      <textarea rows="10" cols="100" name = 'description' placeholder= '{{item.description}}'></textarea>
+      <br>
+      <br>
       <input type = 'submit' value = 'Create'>
     </form>
 
-    <a href = '{{url_for('showMenu', restaurant_id = restaurant.id)}}'>Cancel</a>
+    <a href = '{{url_for('showMenu', restaurant_id = restaurant_id)}}'>Cancel</a>
   </body>
 </html>
